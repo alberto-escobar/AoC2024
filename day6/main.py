@@ -2,7 +2,7 @@ import time
 
 #rendering function so I can view how data updates on the file while code runs
 #handles converting matrix into printabe string
-RENDERING_ON = True
+RENDERING_ON = False
 def renderToOutput(data):
     if not RENDERING_ON:
         return
@@ -68,7 +68,7 @@ while True:
     renderToOutput(data)
 
 renderToOutput(data)
-print(len(visited))
+print(f"part 1: {len(visited)}")
 
 def patrol(area):
     current = [0,0]
@@ -114,7 +114,7 @@ def patrol(area):
 sum = 0
 iteration = 1
 for potential_spot in visited:
-    print(f"{iteration}/{len(visited)}")
+    #print(f"{iteration}/{len(visited)}")
     iteration += 1
     file = open("day6/data.txt")
     data = file.read().split("\n")
@@ -123,4 +123,4 @@ for potential_spot in visited:
     data[potential_spot[0]][potential_spot[1]] = "#"
     if not patrol(data):
         sum += 1
-print(sum)
+print(f"part 2: {sum}")
