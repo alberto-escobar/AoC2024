@@ -30,6 +30,8 @@ for i in range(len(data)):
     terms.append(line)
 
 def dfs(numbers, i, current_sum, result):
+    if current_sum>result:
+        return False
     if i == len(numbers):
         return current_sum == result
     else:
@@ -45,6 +47,8 @@ for i in range(len(results)):
 print(f"Part 1: {sum}")
 
 def dfs(numbers, i, current_sum, result):
+    if current_sum>result:
+        return False
     if i == len(numbers):
         return current_sum == result
     else:
