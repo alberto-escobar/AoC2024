@@ -22,7 +22,6 @@ for i in range(len(data)):
 sum = 0
 invalid_updates = []
 for update in data:
-    print(update)
     invalid_update_flag = False
     for i in range(len(update)):
         if i == len(update) - 1:
