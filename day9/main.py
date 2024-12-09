@@ -17,22 +17,20 @@ for i in range(len(disk_map)):
         for _ in range(int(disk_map[i])):
             block_map.append(".")
 
-
 right = len(block_map)-1
-left = right
-while True:
+left = 0
+while right > left:
     while block_map[right] == ".":
         right -= 1
-    left = right
-    first_free_space_index = float("inf")
-    while left != 0:
-        left -= 1
-        if block_map[left] == "." and left < first_free_space_index:
-            first_free_space_index = left
-    if first_free_space_index == float("inf"):
-        break
-    block_map[first_free_space_index] = block_map[right]
-    block_map[right] = "."
+
+    while block_map[left] != ".":
+        left += 1
+
+    while block_map[right] != "." and block_map[left] == ".":
+        block_map[left] = block_map[right]
+        block_map[right] = "."
+        left += 1
+        right -= 1
 
 sum = 0 
 for i in range(len(block_map)):
@@ -102,5 +100,3 @@ for i in range(len(block_map)):
         
 
 print(f"Part 2: {sum}")
-
-#use a heap next time...
