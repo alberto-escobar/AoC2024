@@ -6,12 +6,14 @@ def renderToOutput(data):
         return
     outputString = ""
     for line in data:
+        for i in range(len(line)):
+            line[i] = str(line[i])
         outputString += "".join(line) + "\n"
 
     file = open("day10/output.txt", "w")
     file.write(outputString)
     file.close()
-    time.sleep(0.1)
+    time.sleep(0.001)
 
 #create data matrix
 file = open("day10/data.txt")
@@ -21,7 +23,9 @@ for i in range(len(data)):
     data[i] = list(data[i])
     for j in range(len(data[i])):
         data[i][j] = int(data[i][j])
-
+renderdata = []
+for line in data:
+    renderdata.append(line.copy())
 def bfs(i, j, height):
     visited = set()
     queue = [(i, j, height)]
@@ -33,7 +37,7 @@ def bfs(i, j, height):
         if (x, y) in visited:
             continue
         visited.add((x, y))
-
+        
         if data[x][y] == 9:
             score += 1
             continue
@@ -61,7 +65,6 @@ def dfs(i, j, height):
 
     if data[i][j] != height+1:
         return 0
-    
     if data[i][j] == 9:
         return 1
 
