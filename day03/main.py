@@ -1,4 +1,4 @@
-file = open("day3\data.txt", "r")
+file = open("day03\data.txt", "r")
 data = file.read()
 file.close()
 

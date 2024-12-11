@@ -1,4 +1,4 @@
-file = open("day2/data.txt")
+file = open("day02/data.txt")
 data = file.read()
 
 reports = data.split("\n")

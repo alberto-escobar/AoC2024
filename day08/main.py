@@ -10,13 +10,13 @@ def renderToOutput(data):
     for line in data:
         outputString += "".join(line) + "\n"
 
-    file = open("day8/output.txt", "w")
+    file = open("day08/output.txt", "w")
     file.write(outputString)
     file.close()
     time.sleep(0.1)
 
 #create data matrix
-file = open("day8/data.txt")
+file = open("day08/data.txt")
 data = file.read().split("\n")
 
 for i in range(len(data)):

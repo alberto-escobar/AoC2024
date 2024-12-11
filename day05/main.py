@@ -1,8 +1,8 @@
-file = open("day5/rules.txt", "r")
+file = open("day05/rules.txt", "r")
 rules = file.read().split("\n")
 file.close()
 
-file = open("day5/data.txt", "r")
+file = open("day05/data.txt", "r")
 data = file.read().split("\n")
 file.close()
 

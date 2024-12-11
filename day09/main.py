@@ -9,13 +9,13 @@ def renderToOutput(data):
         for _ in range(line[1]):
             outputString +=  "." if line[0] == "." else "X"
 
-    file = open("day9/output.txt", "w")
+    file = open("day09/output.txt", "w")
     file.write(outputString)
     file.close()
     time.sleep(0.0001)
 
 #load data
-file = open("day9/data.txt")
+file = open("day09/data.txt")
 data = file.read()
 
 disk_map = data
@@ -94,8 +94,8 @@ while current_id != 0:
         temp = block_map[right].copy()
         block_map[right][0] = "."
         block_map.insert(left, temp)
-    if current_id % 10 == 0:
-        renderToOutput(block_map) 
+    # if current_id % 10 == 0:
+    #     renderToOutput(block_map) 
         
     current_id -= 1
 
