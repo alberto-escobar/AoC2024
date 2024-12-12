@@ -11,9 +11,6 @@ for i in range(len(data)):
 rows = len(data)
 cols = len(data[0])
 
-
-
-
 marked = set()
 
 def find_crop(i, j, plant, area_set):
@@ -76,50 +73,22 @@ print(f"Part 1: {sum}")
 
 def count_corners(i, j, crop_set):
     corners = 0
-    top_left = (i-1, j-1)
-    if top_left[0] < 0 and top_left[1] < 0:
-        corners += 1
-    elif (i-1, j) in crop_set and (i, j-1) in crop_set and (i-1, j-1) not in crop_set:
-        corners += 1
-    elif (i-1, j) not in crop_set and (i, j-1) not in crop_set:
-        corners += 1
-    else:
-        corners += 0
-    
-    top_right = (i-1, j+1)
-    if top_right[0] < 0 and top_right[1] >= cols:
-        corners += 1
-    elif (i-1, j) in crop_set and (i, j+1) in crop_set and (i-1, j+1) not in crop_set:
-        corners += 1
-    elif (i-1, j) not in crop_set and (i, j+1) not in crop_set:
-        corners += 1
-    else:
-        corners += 0
-    
-    bottom_left = (i+1, j-1)
-    if bottom_left[0] >= rows and bottom_left[1] < 0:
-        corners += 1
-    elif (i+1, j) in crop_set and (i, j-1) in crop_set and (i+1, j-1) not in crop_set:
-        corners += 1
-    elif (i+1, j) not in crop_set and (i, j-1) not in crop_set:
-        corners += 1
-    else:
-        corners += 0
-
-    bottom_left = (i+1, j+1)
-    if bottom_left[0] >= rows and bottom_left[1] >= cols:
-        corners += 1
-    elif (i+1, j) in crop_set and (i, j+1) in crop_set and (i+1, j+1) not in crop_set:
-        corners += 1
-    elif (i+1, j) not in crop_set and (i, j+1) not in crop_set:
-        corners += 1
-    else:
-        corners += 0
+    corner_directions = [
+        (-1, -1),
+        (-1, 1),
+        (1, 1),
+        (1, -1)
+    ]
+    for di, dj in corner_directions:
+        lat = (i + di, j)
+        long = (i, j + dj)
+        corner = (i + di, j + dj)
+        if lat in crop_set and long in crop_set and corner not in crop_set:
+            corners += 1
+        elif lat not in crop_set and long not in crop_set:
+            corners += 1
     return corners
     
-
-
-
 sum = 0
 for plant in plant_crops.keys():
     for crop in plant_crops[plant]:
