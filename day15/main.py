@@ -57,8 +57,35 @@ class Robot:
         
 robot = Robot(start)
 
+def renderToOutput():
+    matrix = []
+    for j in range(len(warehouse_map)):
+        row = []
+        for i in range(len(warehouse_map[j])):
+            row.append(".")
+        matrix.append(row)
+
+    for x, y in list(walls):
+        matrix[y][x] = "#"
+    for x, y in list(boxes):
+        matrix[y][x] = "O"
+    
+    x = robot.x
+    y = robot.y
+    matrix[y][x] = "@"
+
+    outputString = ""
+    for line in matrix:
+        outputString += "".join(line) + "\n"
+
+    file = open("day15/output.txt", "w")
+    file.write(outputString)
+    file.close()
+    time.sleep(0.2)
+
 for move in moves:
     robot.move(moves_map[move])
+    #renderToOutput()
 
 sum = 0
 for box in list(boxes):
@@ -160,7 +187,7 @@ def renderToOutput():
     file = open("day15/output.txt", "w")
     file.write(outputString)
     file.close()
-    time.sleep(0.1)
+    time.sleep(0.2)
 
 
 
