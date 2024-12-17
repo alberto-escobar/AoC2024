@@ -1,0 +1,46 @@
+Register A: 59590048
+Register B: 0
+Register C: 0
+
+Program: 2,4,1,5,7,5,0,3,1,6,4,3,5,5,3,0
+
+//notes
+what does each instruction do?
+
+2,4    B = A truncated to last 3 bits
+1,5    B = BXOR5
+7,5    C = A >> B
+0,3    A = A >> 8
+1,6    B = BXOR5
+4,3    B = BXORC
+5,5    output B truncated to last 3 bits
+3,0    jump to start
+
+If you convert the value of reg A into an octal and count the number of octets,
+you get the number of times the programs will do a full loop and print a number.
+
+35184372088832 is the minimum number for reg A we can start searching for a solution 
+at that number because 35184372088832 is eqivalent to  0o1000000000000000, which has 16 octets. 
+The same number of digits in "Program".
+
+If you change the least significant octet in 0o1000000000000000, you change the first 
+digit in the program. 
+
+and our max a value to test is 0o7777777777777777.
+
+So solving part 2 can be done by changing each octet (from least significant octet 
+to most significant) until we get to a solution.
+
+This still leads to a massive search area. instead to help reduce out search space
+find the value of register A required to get the the output 0. This will be a 
+search space of 8 since there is only 8 different values we can test here.
+
+then once that is found, bitshift left by 3 and then search for another value of 
+register A that gets you the output 3,0. This again will be a search space of 8.
+
+when searching through each space, there can be multiple correct solutions, 
+so we should keep track of potential A values that would work best for us, so
+it would be best to use a queue and implement a breadth first search here.
+
+Massive shoutout to user/AlexandraJay2002 for inspiration. I was having 
+problems how BFS could be applied and his work helped me understand.
