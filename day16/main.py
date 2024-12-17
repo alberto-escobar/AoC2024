@@ -1,5 +1,4 @@
 import time
-#create data matrix
 file = open("day16/data.txt")
 data = file.read().split("\n")
 
@@ -9,75 +8,84 @@ for row in data:
 
 start = None
 end = None
-for y in range(len(maze)):
-    for x in range(len(maze[y])):
-        if maze[y][x] == "S":
-            start = (x, y)
-        elif maze[y][x] == "E":
-            end = (x, y)
-
-initial_state = [start, "E", 0, None]
-queue = []
-previous_positions = {}
-queue.append(initial_state)
-visited = {}
+for j in range(len(maze)):
+    for i in range(len(maze[j])):
+        if maze[j][i] == "S":
+            start = (i, j)
+        if maze[j][i] == "E":
+            end = (i, j)
+        
+queue = [[start, "E", 0, []]]
 best_score = float("inf")
-while len(queue) != 0:
-    state = queue.pop(0)
-    position, facing, current_score, previous = state
+best_paths_tiles = set()
+visited = {}
+while queue:
+    position, facing, current_score, path = queue.pop(0)
     x, y = position
-
-    #base case, wall
-    if maze[y][x] == "#":
+    # important here is to check if you visited this spot and the current score is the same
+    # as before. You you are checking just "<" your going to go in loooong loops.
+    if (position, facing) in visited and visited[(position, facing)] <= current_score:
         continue
+    
+    visited[(position, facing)] = current_score
 
-    #base case, already visited using less optimal path
-    if (x, y) in visited and visited[(x, y)] <= current_score:
-        continue
-
-    best_current_score = visited.get((x, y), float("inf"))
-    if current_score < best_current_score:
-        previous_positions[position] = []
-        previous_positions[position].append(previous)
-    elif current_score == best_score and previous not in previous_positions[position]:
-        previous_positions[position].append(previous)
-    #base case, exit 
     if maze[y][x] == "E":
-        best_score = min(current_score,best_score)
-        visited[(x, y)] = best_score
+        if current_score < best_score:
+            best_score = current_score
+            best_paths_tiles.clear()
+            best_paths_tiles.update(path)
+            
+        elif current_score == best_score:
+            best_paths_tiles.update(path)
         continue
-    visited[(x, y)] = current_score
 
+    path = set(path)
+    path.add(position)
+    path = list(path)
     if facing == "E":
-        queue.append([(x+1, y), "E", current_score+1, position])
-        queue.append([(x, y-1), "N", current_score+1001, position])
-        queue.append([(x, y+1), "S", current_score+1001, position])
+        if maze[y][x+1]!="#":
+            queue.append([(x+1, y), "E", current_score+1, path])
+        queue.append([(x, y), "N", current_score+1000, path])
+        queue.append([(x, y), "S", current_score+1000, path])
     elif facing == "N":
-        queue.append([(x, y-1), "N", current_score+1, position])
-        queue.append([(x-1, y), "W", current_score+1001, position])
-        queue.append([(x+1, y), "E", current_score+1001, position])
+        if maze[y-1][x]!="#":
+            queue.append([(x, y-1), "N", current_score+1, path])
+        queue.append([(x, y), "W", current_score+1000, path])
+        queue.append([(x, y), "E", current_score+1000, path])
     elif facing == "W":
-        queue.append([(x-1, y), "W", current_score+1, position])
-        queue.append([(x, y+1), "S", current_score+1001, position])
-        queue.append([(x, y-1), "N", current_score+1001, position])
+        if maze[y][x-1]!="#":
+            queue.append([(x-1, y), "W", current_score+1, path])
+        queue.append([(x, y), "S", current_score+1000, path])
+        queue.append([(x, y), "N", current_score+1000, path])
     elif facing == "S":
-        queue.append([(x, y+1), "S", current_score+1, position])
-        queue.append([(x+1, y), "E", current_score+1001, position])
-        queue.append([(x-1, y), "W", current_score+1001, position])
-
+        if maze[y+1][x]!="#":
+            queue.append([(x, y+1), "S", current_score+1, path])
+        queue.append([(x, y), "E", current_score+1000, path])
+        queue.append([(x, y), "W", current_score+1000, path])
 
 print(f"Part 1: {best_score}")
+print(f"Part 2: {len(best_paths_tiles)+1}")
 
-queue = []
-s = set()
-queue.append(end)
-while queue:
-    position = queue.pop(0)
-    print(position)
-    s.add(position)
-    if position == start:
-        continue
-    previous = previous_positions[position]
-    for p in previous:
-        queue.append(p)
-print(previous_positions)
+
+# this was a tough problem to solve, this code 
+# helped me figure out what was causing my algorithm 
+# to mess up: https://tinyurl.com/2m838xb9
+#
+# ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣶⣶⣶⣶⣤⣀⠀⠀⠀⠀⠀⠀
+# ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⠋⠀⠀⠀⠈⠙⠛⢷⣦⡀⠀⠀⠀
+# ⠀⠀⠀⠀⠀⠀⣀⣤⠴⠶⠚⠛⠛⠛⠲⠾⢿⣟⠛⠻⠶⣤⣀⠀⠀⠙⣿⡀⠀⠀
+# ⠀⠀⠀⠀⣰⠟⣱⢦⢍⢋⠈⡂⠀⠀⠀⠀⠀⠈⠛⣦⠀⠀⠙⠳⣦⡀⣸⡇⠀⠀
+# ⠀⢀⣠⣤⣯⠤⠷⢦⣼⠈⢤⡅⠀⠀⠀⠀⠀⠀⠀⠘⠷⣄⠀⠀⢈⣿⡟⠀⠀⠀
+# ⢀⡾⠁⠂⠀⠀⠀⠈⣿⠀⠘⠁⠀⠀⠀⠀⠀⢀⠆⠀⠀⣸⠀⢀⣿⡿⠀⠀⠀⠀
+# ⣸⠃⠀⠀⠀⠀⠀⡜⢻⠀⢰⡀⠀⠒⠒⠀⣔⡁⠀⢀⠞⣽⣀⣾⡿⠁⠀⠀⠀⠀
+# ⢿⡀⠄⠀⠀⠀⢠⣷⢆⠝⢫⡀⠀⠀⠀⢰⢏⠩⠍⠁⠀⡏⣹⣿⣅⠀⠀⠀⠀⠀
+# ⠈⣻⣄⠀⠀⠀⢨⡿⠥⠄⣀⣹⠀⠀⠀⢸⡼⠀⠀⠀⡰⢰⣽⡿⣿⠇⠀⠀⠀⠀
+# ⠀⠙⠻⣿⣿⣶⣻⠤⠤⣄⣀⠈⠑⠓⠒⠋⡇⣀⠄⣊⣴⣿⠞⣷⡇⠀⠀⠀⠀⠀
+# ⠀⠀⠀⠈⠉⠻⣅⠀⢨⠀⠀⠉⢭⣽⣿⣉⣭⣴⣿⣿⣿⣇⠀⣿⣿⠀⠀⠀⠀⠀
+# ⠀⠀⠀⠀⠀⢐⡏⠀⠀⡀⠀⠀⠀⠹⣯⠛⠛⠁⣸⣿⠷⣯⣳⣾⣿⠀⠀⠀⠀⠀
+# ⠀⠀⠀⠀⠀⣰⠿⡖⢺⣿⣿⣆⠀⠀⠈⢷⡀⣰⣿⠃⠀⠀⠙⠳⠾⠁⠀⠀⠀⠀
+# ⠀⠀⠀⠀⢸⣏⣐⣷⠟⠁⠀⠙⣧⡀⠀⠈⢻⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+# ⠀⠀⠀⠀⠈⠙⠛⠉⠀⠀⠀⠀⣨⣷⣤⠚⢉⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+# ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡞⠫⣡⢣⣴⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+# ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣶⣾⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+#  PLEASE NO MORE 2D PUZZLES
